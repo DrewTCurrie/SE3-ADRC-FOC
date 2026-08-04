@@ -8,3 +8,4 @@ services:
     volumes:
       - /tmp/.X11-unix:/tmp/.X11-unix
       - /opt/Xilinx/Projects/SE3_ADRC_FOC_KR260:/home/builder/workspace
+      - /opt/Xilinx/petalinux:/home/builder/petalinux
