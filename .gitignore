@@ -1,0 +1,17 @@
+# Vivado Log and Journal files
+*.log
+*.jou
+*.str
+
+#Vivado project directories to ignore
+*/.Xil/
+*.cache
+*.hw/
+*.ip_user_files/
+*.runs/
+*sim/
+*.gen/
+
+#SDK/Vitis metadata
+.metadata/
+/Workspace/
