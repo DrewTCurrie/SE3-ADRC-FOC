@@ -15,3 +15,9 @@
 #SDK/Vitis metadata
 .metadata/
 /Workspace/
+
+#PetaLinux project directorie to ignore
+petalinux-docker/workspace/KR260_ADRC/build/*
+petalinux-docker/workspace/KR260_ADRC/images/*
+petalinux-docker/workspace/KR260_ADRC/components/*
+petalinux-docker/workspace/KR260_ADRC/.petalinux
