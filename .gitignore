@@ -23,6 +23,9 @@ petalinux-docker/workspace/KR260_ADRC/components/*
 petalinux-docker/workspace/KR260_ADRC/.petalinux
 petalinux-docker/petalinux-cache/sstate/*
 petalinux-docker/petalinux-cache/downloads/*
+petalinux-docker/workspace/_inputs/*
+#Force keep directory structure for future cloning
 !petalinux-docker/petalinux-cache/.gitkeep
 !petalinux-docker/petalinux-cache/downloads/.gitkeep
 !petalinux-docker/petalinux-cache/sstate/.gitkeep
+!petalinux-docker/workspace/_inputs/.gitkeep
