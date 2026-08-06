@@ -21,3 +21,8 @@ petalinux-docker/workspace/KR260_ADRC/build/*
 petalinux-docker/workspace/KR260_ADRC/images/*
 petalinux-docker/workspace/KR260_ADRC/components/*
 petalinux-docker/workspace/KR260_ADRC/.petalinux
+petalinux-docker/petalinux-cache/sstate/*
+petalinux-docker/petalinux-cache/downloads/*
+!petalinux-docker/petalinux-cache/.gitkeep
+!petalinux-docker/petalinux-cache/downloads/.gitkeep
+!petalinux-docker/petalinux-cache/sstate/.gitkeep
