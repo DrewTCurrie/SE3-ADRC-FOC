@@ -1,10 +1,11 @@
 services:
   petalinux-builder:
     image: petalinux-builder:22.04
+    user: "1000:1000"
     stdin_open: true
     tty: true
     volumes:
-      - /opt/Xilinx/Projects/SE3-ADRC-FOC/petalinux-docker/workspace:/home/builder/workspace
-      - /opt/Xilinx/Projects/SE3-ADRC-FOC/petalinux-install/:/home/builder/petalinux
-      - /opt/Xilinx/Projects/SE3-ADRC-FOC/petalinux-docker/petalinux-cache/downloads:/home/builder/downloads
-      - /opt/Xilinx/Projects/SE3-ADRC-FOC/petalinux-docker/petalinux-cache/sstate:/home/builder/sstate
+      - /opt/Xilinx/Projects/SE3-ADRC-FOC/petalinux-docker/workspace:/home/builder/workspace:Z
+      - /opt/Xilinx/Projects/SE3-ADRC-FOC/petalinux-install/:/home/builder/petalinux:Z
+      - /opt/Xilinx/Projects/SE3-ADRC-FOC/petalinux-docker/petalinux-cache/downloads:/home/builder/downloads:Z
+      - /opt/Xilinx/Projects/SE3-ADRC-FOC/petalinux-docker/petalinux-cache/sstate:/home/builder/sstate:Z
