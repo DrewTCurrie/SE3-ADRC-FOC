@@ -79,8 +79,10 @@ SE3-ADRC-FOC/
 │   ├── docker-compose.yml     # Bind-mounts workspace/, petalinux-install/, and the sstate/downloads cache
 │   ├── launchPetaLinux.sh     # Convenience script to drop into the build container
 │   ├── petalinux-cache/       # Local sstate-cache / downloads mirror, reused across container runs
-│   └── workspace/
-│       └── KR260_ADRC/        # The actual PetaLinux project (BSP config, meta-user layer, hw-description)
+│   └── workspace/             # The PetaLinux Docker workspace
+│       ├── KR260_ADRC/        # The actual PetaLinux project (BSP config, meta-user layer, hw-description)
+│       ├──_inputs/            # Temporary pass through to the Docker container for files needed        
+│       └──reference-files     # Storage for files such as BSPs and XSAs            
 └── petalinux-install/         # Mount point for the installed PetaLinux SDK/tools (see setup below)
 ```
 
