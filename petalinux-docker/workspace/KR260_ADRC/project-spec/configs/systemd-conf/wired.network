@@ -5,5 +5,5 @@ Name=!veth*
 KernelCommandLine=!nfsroot
 KernelCommandLine=!ip
 [Network]
-Address=192.168.2.20/24
+Address=192.168.2.10/24
 Gateway=0.0.0.0

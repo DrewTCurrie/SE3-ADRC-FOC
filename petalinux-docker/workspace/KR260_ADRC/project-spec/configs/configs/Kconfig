@@ -9,7 +9,7 @@ config SYSTEM_ZYNQMP
         bool "ZYNQMP Configuration"
         help
           ZYNQMP Configuration for the project.
-          All these config options will be in /home/builder/workspace/KR260_ADRC_xsa/project-spec/configs/config
+          All these config options will be in /home/builder/workspace/KR260_ADRC/project-spec/configs/config
 
 config SUBSYSTEM_VARIANT_ZYNQMPEV
         bool
@@ -21,4 +21,4 @@ config SUBSYSTEM_DISTRO_PETALINUX
         default y
         help
 
-source /home/builder/workspace/KR260_ADRC_xsa/project-spec/configs/configs/Kconfig.main
+source /home/builder/workspace/KR260_ADRC/project-spec/configs/configs/Kconfig.main

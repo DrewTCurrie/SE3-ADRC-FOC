@@ -9310,7 +9310,7 @@ config Init-manager-sysvinit
 endchoice
 endmenu
 
-source /home/builder/workspace/KR260_ADRC_xsa/project-spec/configs/rootfsconfigs/Kconfig.user
+source /home/builder/workspace/KR260_ADRC/project-spec/configs/rootfsconfigs/Kconfig.user
 
 menu "PetaLinux RootFS Settings"
 config ADD_EXTRA_USERS
