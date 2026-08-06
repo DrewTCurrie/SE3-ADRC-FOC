@@ -7,5 +7,7 @@ services:
       - DISPLAY=${DISPLAY}
     volumes:
       - /tmp/.X11-unix:/tmp/.X11-unix
-      - /opt/Xilinx/Projects/SE3_ADRC_FOC_KR260:/home/builder/workspace
-      - /opt/Xilinx/petalinux:/home/builder/petalinux
+      - /opt/Xilinx/Projects:/home/builder/workspace
+      - /opt/Xilinx/petalinux/:/home/builder/petalinux
+      - /opt/Xilinx/petalinux-cache/downloads:/home/builder/downloads
+      - /opt/Xilinx/petalinux-cache/sstate:/home/builder/sstate

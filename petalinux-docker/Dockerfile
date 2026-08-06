@@ -16,6 +16,8 @@ RUN apt-get update && apt-get install -y \
     libncurses5-dev libglib2.0-dev tftp tftpd-hpa dos2unix \
     tar unzip gzip xvfb curl patch bzip2 coreutils rsync lsb-release sed \
     findutils file bc time vim neovim iputils-ping dnsutils  \
+    python3-yaml python3-jsonschema python3-ruamel.yaml python3-packaging \
+    zstd liblz4-tool pigz libncurses-dev \
     && rm -rf /var/lib/apt/lists/*
 
 RUN locale-gen en_US.UTF-8
@@ -23,9 +25,10 @@ ENV LANG=en_US.UTF-8
 RUN useradd -m -s /bin/bash builder && echo "builder:password" | chpasswd
 RUN usermod -aG sudo builder
 RUN echo "builder ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
+RUN echo "dash dash/sh boolean false" | debconf-set-selections && \
+  DEBIAN_FRONTEND=noninteractive dpkg-reconfigure dash
 USER builder
 WORKDIR /home/builder/workspace
 SHELL ["/bin/bash","-c"]
 ENV DISPLAY=:0
 WORKDIR /home/builder/workspace
-VOLUME /home/builder/workspace
