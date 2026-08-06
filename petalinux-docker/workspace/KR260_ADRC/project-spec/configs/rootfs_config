@@ -3971,6 +3971,7 @@ CONFIG_Init-manager-systemd=y
 #
 # user packages 
 #
+CONFIG_adrc-ctrl=y
 # CONFIG_gpio-demo is not set
 # CONFIG_peekpoke is not set
 
