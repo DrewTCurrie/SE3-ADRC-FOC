@@ -1,14 +1,14 @@
-2026-08-06 21:40:02,711 - [DEBUG] Using xsct from : /home/builder/petalinux/components/xsct/bin/xsct
-2026-08-06 21:40:02,711 - [INFO] Getting Platform info from HW file
-2026-08-06 21:40:02,711 - [DEBUG] Using the soc_family specified by user:zynqmp
-2026-08-06 21:40:02,724 - [DEBUG] Hardware Configuration:
-2026-08-06 21:40:02,724 - [DEBUG] MACHINE     = "None"
-2026-08-06 21:40:02,724 - [DEBUG] DEVICE_ID   = "xck26"
-2026-08-06 21:40:02,724 - [DEBUG] SOC_FAMILY  = "zynqmp"
-2026-08-06 21:40:02,724 - [DEBUG] SOC_VARIANT = "ev"
-2026-08-06 21:40:02,724 - [INFO] Silentconfig project
-2026-08-06 21:40:02,724 - [DEBUG] Running CMD: yes "" | env KCONFIG_CONFIG=/home/builder/workspace/KR260_ADRC/project-spec/configs/config conf /home/builder/workspace/KR260_ADRC/project-spec/configs/configs/Kconfig
-2026-08-06 21:40:02,728 - [DEBUG] *
+2026-08-07 20:15:29,673 - [DEBUG] Using xsct from : /home/builder/petalinux/components/xsct/bin/xsct
+2026-08-07 20:15:29,673 - [INFO] Getting Platform info from HW file
+2026-08-07 20:15:29,673 - [DEBUG] Using the soc_family specified by user:zynqmp
+2026-08-07 20:15:29,687 - [DEBUG] Hardware Configuration:
+2026-08-07 20:15:29,687 - [DEBUG] MACHINE     = "None"
+2026-08-07 20:15:29,687 - [DEBUG] DEVICE_ID   = "xck26"
+2026-08-07 20:15:29,687 - [DEBUG] SOC_FAMILY  = "zynqmp"
+2026-08-07 20:15:29,687 - [DEBUG] SOC_VARIANT = "ev"
+2026-08-07 20:15:29,687 - [INFO] Silentconfig project
+2026-08-07 20:15:29,687 - [DEBUG] Running CMD: yes "" | env KCONFIG_CONFIG=/home/builder/workspace/KR260_ADRC/project-spec/configs/config conf /home/builder/workspace/KR260_ADRC/project-spec/configs/configs/Kconfig
+2026-08-07 20:15:29,690 - [DEBUG] *
 * PetaLinux System Configuration
 *
 ZYNQMP Configuration (SYSTEM_ZYNQMP) [Y/?] y
@@ -97,7 +97,7 @@ Primary Ethernet
 choice[1-3?]: Randomise MAC address (SUBSYSTEM_ETHERNET_PSU_ETHERNET_1_MAC_AUTO) [N/y/?] 
   Ethernet MAC address (SUBSYSTEM_ETHERNET_PSU_ETHERNET_1_MAC) [] 
 Obtain IP address automatically (SUBSYSTEM_ETHERNET_PSU_ETHERNET_1_USE_DHCP) [N/y/?] 
-  Static IP address (SUBSYSTEM_ETHERNET_PSU_ETHERNET_1_IP_ADDRESS) [192.168.2.10] 
+  Static IP address (SUBSYSTEM_ETHERNET_PSU_ETHERNET_1_IP_ADDRESS) [192.168.2.20] 
   Static IP netmask (SUBSYSTEM_ETHERNET_PSU_ETHERNET_1_IP_NETMASK) [255.255.255.0] 
   Static IP gateway (SUBSYSTEM_ETHERNET_PSU_ETHERNET_1_IP_GATEWAY) [0.0.0.0] 
 *
@@ -288,22 +288,16 @@ user layer 0 (USER_LAYER_0) []
 #
 # configuration written to /home/builder/workspace/KR260_ADRC/project-spec/configs/config
 #
-2026-08-06 21:40:02,755 - [DEBUG] /home/builder/workspace/KR260_ADRC/components/yocto/layers/meta-xilinx/meta-xilinx-core/gen-machine-conf/gen-machine-scripts/petalinux-find-ipaddr AUTO
-2026-08-06 21:40:02,766 - [DEBUG] 
+2026-08-07 20:15:29,717 - [DEBUG] /home/builder/workspace/KR260_ADRC/components/yocto/layers/meta-xilinx/meta-xilinx-core/gen-machine-conf/gen-machine-scripts/petalinux-find-ipaddr AUTO
+2026-08-07 20:15:29,726 - [DEBUG] 
 172.18.0.2
 
 
 
-2026-08-06 21:40:02,767 - [INFO] Menuconfig rootfs
-2026-08-06 21:40:02,767 - [DEBUG] Running CMD: env KCONFIG_CONFIG=/home/builder/workspace/KR260_ADRC/project-spec/configs/rootfs_config mconf -s /home/builder/workspace/KR260_ADRC/project-spec/configs/rootfsconfigs/Kconfig
-2026-08-06 21:52:45,971 - [INFO] Generating configuration files
-2026-08-06 21:52:45,972 - [DEBUG] No multilibs enabled.
-2026-08-06 21:52:45,972 - [DEBUG] No multilibs enabled.
-2026-08-06 21:52:45,972 - [DEBUG] Skip adding layers as no bitbake-layers or builddir found
-2026-08-06 21:52:45,985 - [INFO] Generating plnxtool conf file
-2026-08-06 21:52:45,998 - [DEBUG] python3 /home/builder/workspace/KR260_ADRC/components/yocto/layers/meta-xilinx/meta-xilinx-core/gen-machine-conf/gen-machine-scripts/rootfsconfigs/rootfs_config.py --update_cfg /home/builder/workspace/KR260_ADRC/project-spec/configs/rootfs_config /home/builder/workspace/KR260_ADRC/build/conf/plnxtool.conf zynqmp
-2026-08-06 21:52:46,026 - [DEBUG] 
-
-
-
-2026-08-06 21:52:46,027 - [DEBUG] Shutting down bitbake
+2026-08-07 20:15:29,728 - [INFO] Menuconfig rootfs
+2026-08-07 20:15:29,728 - [DEBUG] Running CMD: env KCONFIG_CONFIG=/home/builder/workspace/KR260_ADRC/project-spec/configs/rootfs_config mconf -s /home/builder/workspace/KR260_ADRC/project-spec/configs/rootfsconfigs/Kconfig
+2026-08-07 20:16:00,308 - [INFO] Generating configuration files
+2026-08-07 20:16:00,309 - [DEBUG] No multilibs enabled.
+2026-08-07 20:16:00,309 - [DEBUG] No multilibs enabled.
+2026-08-07 20:16:00,309 - [DEBUG] Skip adding layers as no bitbake-layers or builddir found
+2026-08-07 20:16:00,322 - [DEBUG] Shutting down bitbake
