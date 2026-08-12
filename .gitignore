@@ -12,6 +12,10 @@
 *sim/
 *.gen/
 
+# AMD BSP files to ignore
+# While keeping these would be ideal, GitHub limits the file size
+# and given that these are ~3-5GiB each they can't be stored on GitHub
+*.bsp
 #SDK/Vitis metadata
 .metadata/
 /Workspace/
