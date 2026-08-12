@@ -35,3 +35,5 @@ petalinux-install/*
 !petalinux-docker/petalinux-cache/sstate/.gitkeep
 !petalinux-docker/workspace/_inputs/.gitkeep
 !petalinux-install/.gitkeep
+vivado_project/KR260_CarrierBoard_ADRC/KR260_CarrierBoard_ADRC.srcs/sources_1/bd/system/system.bd
+vivado_project/KR260_CarrierBoard_ADRC/KR260_CarrierBoard_ADRC.srcs/sources_1/bd/system/system.bda
