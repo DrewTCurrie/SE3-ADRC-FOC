@@ -9,3 +9,5 @@ services:
       - /opt/Xilinx/Projects/SE3-ADRC-FOC/petalinux-install/:/home/builder/petalinux:Z
       - /opt/Xilinx/Projects/SE3-ADRC-FOC/petalinux-docker/petalinux-cache/downloads:/home/builder/downloads:Z
       - /opt/Xilinx/Projects/SE3-ADRC-FOC/petalinux-docker/petalinux-cache/sstate:/home/builder/sstate:Z
+      - /srv/tftp/:/srv/tftp/:z
+      - /srv/nfs/shared/petalinux-nfs/:/srv/nfs/shared/petalinux-nfs:z
