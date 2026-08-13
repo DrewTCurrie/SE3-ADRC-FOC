@@ -149,7 +149,11 @@ Once the project is open, connect and validate the block design, generate
 the bitstream, and export the hardware (**File → Export → Export Hardware**,
 include bitstream) to produce the `.xsa` used by PetaLinux in the next step.
 
-### 3. Build the PetaLinux image (Docker)
+### 3. Deploy to the KR260
+For setting up the enviroment for booting the KR260 see the documentation linked below:
+[Boot Procedure for the KR260](documentation/KR260_BootDocumenation.md)
+
+### 4. Build the PetaLinux image (Docker)
 
 The PetaLinux build toolchain is heavy and Linux-only, so it's wrapped in
 Docker:
@@ -180,6 +184,8 @@ This runs `docker compose run --rm petalinux-builder bash`, which mounts:
 | `petalinux-install/` | `/home/builder/petalinux` | Installed PetaLinux SDK/tools |
 | `petalinux-docker/petalinux-cache/downloads` | `/home/builder/downloads` | Yocto downloads cache |
 | `petalinux-docker/petalinux-cache/sstate` | `/home/builder/sstate` | Yocto sstate-cache (speeds up rebuilds) |
+| `/srv/tftp` | `/srv/tftp` | Links Docker image PetaLinux to host TFTP server for deploying changes |
+| `/srv/nfs/shared/petalinux-nfs` | `/srv/nfs/shared/petalinux-nfs` |
 
 Inside the container, source the PetaLinux settings script, `cd` into
 `workspace/KR260_ADRC`, update the hardware description with the `.xsa`
@@ -192,11 +198,6 @@ cd workspace/KR260_ADRC
 petalinux-config --get-hw-description=<path to exported .xsa>
 petalinux-build
 ```
-
-### 4. Deploy to the KR260
-For setting up the enviroment for booting the KR260 see the documentation linked below:
-[Boot Procedure for the KR260](documentation/KR260_BootDocumenation.md)
-
 
 ---
 
