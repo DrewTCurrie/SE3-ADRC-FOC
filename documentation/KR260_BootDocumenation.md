@@ -13,8 +13,11 @@ Written by Drew Currie 08/12/2026
 - Setting up Docker
 - Ubuntu host computer support
 
-## Table of contents
+>[!CAUTION]
+> This is not a step-by-step guide on booting the KR260. This provides a lot of steps and a lot of references. It is advised to read this entire document before attempting to boot the KR260. Linked documentation is linked because it is important. Use these links to read additional information or explainations on why certain commands are being run. I recommend having a high quality understanding of the process before beginning. There are many nuanced details that can be easily missed on a first pass through.  
 
+## Table of contents
+[TOC]
 
 ## General Boot Procedure
 The general boot procedure used in this documentation is using the AMD provided base Ubuntu 24.04 LTS server image. This image can be found on Ubuntu's official page specifically for the AMD KR260 [linked here](https://ubuntu.com/download/amd#kria-k26). 
@@ -28,63 +31,78 @@ Packages to install:
 ``` bash
 dnf install tftp nfs-utils
 ```
+>[!TIP]
+> dnf5 which Fedora uses for managing and installing packages requires root access or to be run with sudo to install new packages. 
 
 This will bring the basic TFTP and NFS server packages. To make both of these work, there is extensive configuration of the firewall along with configuration of each server. 
 
-1. Configure the directories
-    Create the following directory structure:
-    > [!TIP]
-    > These directories will need to be created as root or with sudo
+#### 1. Configure the directories
+Create the following directory structure:
 
-    ``` bash    
-        /srv
-        ├──tftp
-        └──nfs
-        └──shared
-            └──petalinux-nfs
-    ```
-    Once the directories are created permissions for each will need to be changed. 
+``` bash    
+    /srv
+    ├──tftp
+    └──nfs
+    └──shared
+        └──petalinux-nfs
+```
 
-    > [!TIP]
-    > These commands will need to be run as root or with sudo
+Once the directories are created permissions for each will need to be changed. 
 
-    ``` bash
-    chown -R nobody:nobody /srv/tftp
-    chown -R nobody:nobody /srv/nfs/shared
-    ```
+``` bash
+chown -R nobody:nobody /srv/tftp
+chown -R nobody:nobody /srv/nfs/shared
+```
 
-2. Configuring the Fedora firewall
+> [!TIP]
+> The above commands will need to be run as root or with sudo. This includes creating the directories. 
+
+
+#### 2. Configuring the Fedora firewall
 Fedora provides a base firewall package named ```firewalld```. Additional documentation can be [found here](https://firewalld.org/). 
 
-    > [!WARNING]
-    > Modifications to the system firewall can expose the computer to potential risks. Only execute these commands if you understand what they are doing and why they are being executed. 
+> [!WARNING]
+> Modifications to the system firewall can expose the computer to potential risks. Only execute these commands if you understand what they are doing and why they are being executed. 
 
 
-    ```bash
-    firewall-cmd --permanent --add-service nfs
-    firewall-cmd --permanent --add-service tftp
-    firewall-cmd --reload
-    ```
+```bash
+firewall-cmd --permanent --add-service nfs
+firewall-cmd --permanent --add-service tftp
+firewall-cmd --reload
+```
 
-    To confirm the services have been added and are working run:
-    ```bash
-    firewall-cmd --list-services
-    ```
+To confirm the services have been added and are working run:
+```bash
+firewall-cmd --list-services
+```
 
-    > [!TIP]
-    > The commands below are only for NFSv3. This documentation is written with the expectation that NFSv3 is being used. This is due to legacy configuration from previous Graduate Students. The KR260 supports NFSv4. 
+> [!TIP]
+> The commands below are only for NFSv3. This documentation is written with the expectation that NFSv3 is being used. This is due to legacy configuration from previous Graduate Students. The KR260 supports NFSv4. 
 
-    ```bash
-    firewall-cmd --permanent --add-service=rpc-bind
-    firewall-cmd --permanent --add-service=mountd
-    firewall-cmd --reload
-    ```
+```bash
+firewall-cmd --permanent --add-service=rpc-bind
+firewall-cmd --permanent --add-service=mountd
+firewall-cmd --reload
+```
 
-    To confirm the services have been added and are working run:
-    ```bash
-    firewall-cmd --list-services
-    ```
-3. Configure network:
+To confirm the services have been added and are working run:
+```bash
+firewall-cmd --list-services
+```
+
+>[!NOTE]
+> Sometimes the firewall requires special commands to be configured correctly. If you are running into firewall issues during the boot process run the commands below as root or with sudo.
+
+```bash
+firewall-cmd --get-active=zones
+ZONE = <zone from previous output>
+firewall-cmd --permanent --zone=$ZONE --add-service=nfs3
+firewall-cmd --permanent --zone=$ZONE --add-service=tftp
+firewall-cmd --reload
+firewall-cmd --zone=$ZONE --list-services
+```
+
+#### 3. Configure network:
 Network configuration must be done in a manual manner to create the proper boot structure for the KR260. *These network values are hardcoded and should be followed directly. Small typos can lead to hours of debugging* The directions are assuming you are using an Ethernet connection between the devices. Configure the host ethernet network adapter with the configuration in the table below. 
 
 Configuration Scheme:
@@ -96,15 +114,38 @@ Configuration Scheme:
 | Default Gateway | 192.168.2.10 | 192.168.2.10 |
 | DNS Server | 1.1.1.1 | 1.1.1.1|
 
-4. **TODO**: Update to include NFS server configuration specific tasks
+#### 4. NFS Server configuration
 
-5. Configure host computer for UART communication
+When setting up the NFS server, the configuration must be set in ```/etc/exports```. This is where the NFS service we installed earlier pulls the information from to properly export the shared files over the network. This includes sharing only the specific directories and in what way so that the root file-system is preserved correctly for booting. Additional documentation can be [found here](https://docs.redhat.com/en/documentation/red_hat_enterprise_linux/5/html/deployment_guide/s1-nfs-server-config-exports)
+
+Insert the following line into the ```/etc/exports``` file:
+
+```c
+/srv/nfs/shared/petalinux-nfs  192.168.2.0/24(rw,sync,no_root_squash,no_subtree_check)
+```
+
+>[!TIP]
+> This file is write protected. You must edit this as root or with sudo. 
+
+Once the network configuration mapping has been updated for the NFS server, the NFS server must reload the configuration. 
+
+```bash
+exportfs -ra
+exportfs -v
+```
+>[!TIP]
+> These commands must be run as root or with sudo. 
+
+Once these commands have been run the NFS server will be dynamically reloaded with the new configuration, not restart required. 
+
+#### 5. Configure host computer for UART communication
+
 The KR260 can be configured (And is configured by default) to provide a UART communication protocol at boot. Minicom is the preferred option to accessing this UART terminal through the host computer. Alternatives like PicoCom and Screen are available and left to personal preference. This documentation will assume use of Minicom.
 
 > [!TIP]
 > Minicom will need to be run as root or sudo unless you change the permissions on the selected ttyUSB interface. 
 
-To connect to the KR260 UART port, you need to determine which port in ```/dev/``` it is bound to. Once that has been determined replaced the '*' in the command with the appropriate number. 
+To connect to the KR260 UART port, you need to determine which port in ```/dev/``` it is bound to. Once that has been determined replaced the **'*'** in the command with the appropriate number. 
 
 ```bash
 minicom -D /dev/ttyUSB*
@@ -117,12 +158,50 @@ Once in Minicom, you will want to enable line wrapping, this will be very useful
 > [!NOTE]
 > During Minicom use at this point you may not see any text. That is expected behavior as the KR260 is not booting or outputting any data on the UART lines. 
 
+
+### Getting the image ready to boot
+
+Now that the NFS and TFTP servers have been installed, file structure created, and NFS server configured, now the files must be populated and the servers started. 
+
+The base Ubuntu image provided needs modifications to support booting via TFTP and NFS. To configure the image first [follow the directions on flashing the image to a microSD card](https://xilinx.github.io/kria-apps-docs/kr260/linux_boot/ubuntu_22_04/build/html/docs/sdcard.html). Once the micro-SD card has been flashed and is ready to boot, leave it connected to the computer. We will be using the micro-SD card to configure the files in the TFTP and NFS servers. 
+
+Mount the micro-SD card partitions to somewhere you can access them 
+```bash
+mkdir -p /mnt/kr260_boot /mnt/kr260_root
+mount /dev/sdX1 /mnt/kr260_boot
+mount /dev/sdX2 /mnt/kr260_boot
+ls /mnt/kr260_boot
+```
+The ls command should return a file named ```boot.scr.uimg``` or ```boot.scr``` or similar, and ```image.fit``` the ```image.fit``` file must be copied to the TFTP server for boot.
+
+```bash
+cp /mnt/kr26_boot/image.fit /srv/tftp/image.ub
+```
+
+>[!TIP]
+> Notice the file extension change on the image file. This is to keep consistency with standard conventions. This is expected in later directions related to booting
+
+The NFS server must also be populated with the root file-system. 
+```bash
+rsync -aAXv /mnt/kr260_root/ /srv/nfs/shared/petalinux-nfs/ 
+```
+This will move all the root file-system files to the NFS server and preserve the ownership and permissions so the root file-system boots correctly on the KR260. 
+
+After moving all the relevant files, it is recommended to unmount the partitions that are no longer needed.
+```bash
+umount /mnt/kr260_boot /mnt/kr260_root
+```
+
+>[!TIP]
+>Most of the commands in the above section require to be run as root or with sudo. 
+>The sdX1 and sdX2 are expected to be replaced with the correct partition identifiers. These should be determined during the flashing the image to the micro-SD card step. 
+>If not, these values can be found using ```lsblk`` or with a Disk Managemnet tool. 
+
+
 ### Setting up for first boot
 Once the NFS and TFTP servers have been installed and configured, it is now time to modify the Ubuntu image to be booted via TFTP and NFS. 
 > [!WARNING]
 > The pathing and commands to achieve this are important to get correct. These will be referenced by U-Boot, PetaLinux, and Ubuntu. Failure to get these correct now will cause problems at boot time. 
-
-#### Modifying the downloaded image 
 
 
 #### Modifying the update-misc-config.sh
@@ -283,9 +362,88 @@ This sets the boot command that will be executed by U-Boot when the board is pow
 
     - sck-kr-g-revB: Starter Kit Carrier Board (the baseboard with ports, Revision B).
 
- - Without specifying this configuration offset into the Kernel provided by AMD, the wrong configuration will be loaded. The configuration that includes **no** IO will be loaded. This will result in various errors related to IO, ranging form Ethernet to UART to SPI, etc. This offset is different for each individual board. These should be checked with the U-Boot "Detected Name" on first power on. 
+ - Without specifying this configuration offset into the Kernel provided by AMD, the wrong configuration will be loaded. The configuration that includes **no** IO will be loaded. This will result in various errors related to IO, ranging form Ethernet to UART to SPI, etc. This offset is different for each individual board. These should be checked with the U-Boot "Detected Name" on first power on. See the example boot log below for where this specific mask came from. This "Detected Name" must be compared against [AMD's source code for U-Boot](https://github.com/Xilinx/u-boot-xlnx/blob/master/include/configs/xilinx_zynqmp.h) to get the final configuration name.  
 
- **TODO:** Get text of first power on and highlight the relevant line. 
+<!--Boot log pulled form the KR260 used for this project -->
+    >Zynq MP First Stage Boot Loader 
+    >Release 2025.2   Nov 13 2025  -  10:49:34
+    >MultiBootOffset: 0x40
+    >Reset Mode      :       System Reset
+    >Platform: Silicon (4.0), Running on A53-0 (64-bit) Processor, Device Name: XCZUxxEG
+    >QSPI 32 bit Boot Mode 
+    >FlashID=0x20 0xBB 0x20
+    >PMU Firmware 2025.2     Nov 13 2025   10:49:34
+    >PMU_ROM Version: xpbr-v8.1.0-0
+    >Protection configuration applied
+    >Exit from FSBL 
+    >NOTICE:  BL31: Non secure code at 0x8000000
+    >NOTICE:  BL31: v2.12.0(release):xlnx_rebase_v2.12_2025.1-165-g894ecd073-dirty
+    >NOTICE:  BL31: Built : 08:14:53, Oct 16 2025
+    >
+    >
+    >U-Boot 2025.01-g5e0d8abc7e09 (Nov 12 2025 - 07:44:59 +0000)
+    >
+    >CPU:   ZynqMP
+    >Silicon: v3
+    >Chip:  xck26
+    ==Detected name: zynqmp-smk-k26-xcl2g-rev1-sck-kr-g-rev1==
+    >Model: ZynqMP KR260 revB
+    >Board: Xilinx ZynqMP
+    >DRAM:  2 GiB (effective 4 GiB)
+    >Xilinx I2C FRU format at nvmem0:
+    > Manufacturer Name: XILINX
+    > Product Name: SMK-K26-XCL2G
+    > Serial No: XFL1KNG3N1HM
+    > Part Number: 5057-04
+    > File ID: 0x0
+    > Revision Number: 1
+    >Xilinx I2C FRU format at nvmem1:
+    > Manufacturer Name: XILINX
+    > Product Name: SCK-KR-G
+    > Serial No: XFL11QDNJBZK
+    > Part Number: 5100-01
+    > File ID: 0x0
+    > Revision Number: 1
+    >EL Level:       EL2
+    >Secure Boot:    not authenticated, not encrypted
+    >Core:  103 devices, 33 uclasses, devicetree: fit
+    >MMC:   
+    >Loading Environment from SPIFlash... SF: Detected mt25qu512a with page size 256 Bytes, erase size 64 KiB, total 64 MiB
+
+>[!TIP]
+> When booting via TFTP and NFS it can be useful to monitor the incoming traffic to see if the KR260 is booting correctly. Run the following command as root or with sudo to monitor traffic.
+> ```bash 
+>tcpdump -i enp12s0 -n 'host 192.168.2.20'
+>```
+>```enp12s0``` will need to be replaced with the correct ethernet adapter name
+
 
 ## Post boot checks
-**TODO:** Add post boot Linux commands to check everything is up and running correctly. 
+Run the following commands once the KR260 has been booted to confirm everything is working as intended. 
+
+```bash 
+ip addr show eth1
+dmesg | grep -i macb
+systemctl --failed
+ping 192.168.2.10
+touch test.txt
+rm test.txt
+```
+
+Ethernet should be connected with a valid mac address to the host computer. Systemd should have no reported failed modules loaded. With that, network connectivity should be working and the host computer should be able to be reached via ping. Lastly, the file system should be mounted in read and write mode. This is tested through creating and removing ```test.txt```.
+
+From the host computer:
+
+```bash
+cd /srv/nfs/shared/petalinux-nfs
+touch test.txt
+```
+Does the ```test.txt``` appear on the KR260? 
+
+```bash
+rm test.txt
+```
+
+Did the test.txt disappear from the KR260?
+
+If both of those worked, then the NFS server is working correctly and the KR260 has been properly network booted. 
