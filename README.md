@@ -193,21 +193,9 @@ petalinux-build
 ```
 
 ### 4. Deploy to the KR260
+For setting up the enviroment for booting the KR260 see the documentation linked below:
+[Boot Procedure for the KR260](documentation/KR260_BootDocumenation.md)
 
-The KR260 uses the Kria **accelerated-application** model rather than baking
-the bitstream into `BOOT.BIN`. After building, place the bitstream, device
-tree overlay, and shell manifest in `/lib/firmware/xilinx/<app-name>/` on the
-target and load at runtime:
-
-```sh
-xmutil loadapp <app-name>
-```
-
-See the *Programming Sequence* section of
-[`product_guide.md`](src/hdl/adrc_axi_ctrl_1_0/product_guide.md) for how to
-bring up and exercise the `adrc_axi_ctrl` register interface once the PL
-image is loaded (including a `devmem`-based smoke test that validates the
-PS↔PL path before any motor is connected).
 
 ---
 
