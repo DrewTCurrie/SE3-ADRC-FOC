@@ -64,6 +64,7 @@ implementation.
 
 ```
 SE3-ADRC-FOC/
+├── documentation             # This directory stores all project related documentation
 ├── create_project.tcl        # Regenerates the Vivado project + block design from scratch
 ├── src/
 │   ├── constraints/           # XDC constraints (bd/ holds block-design-scoped constraints)
