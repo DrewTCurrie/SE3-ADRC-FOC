@@ -1,0 +1,1 @@
+../src/hdl/adrc_axi_ctrl_1_0/product_guide.md
