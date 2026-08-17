@@ -29,11 +29,12 @@ petalinux-docker/petalinux-cache/sstate/*
 petalinux-docker/petalinux-cache/downloads/*
 petalinux-docker/workspace/_inputs/*
 petalinux-install/*
+petalinux-docker/workspace/KR260_ADRC/project-spec/*
 #Force keep directory structure for future cloning
 !petalinux-docker/petalinux-cache/.gitkeep
 !petalinux-docker/petalinux-cache/downloads/.gitkeep
 !petalinux-docker/petalinux-cache/sstate/.gitkeep
 !petalinux-docker/workspace/_inputs/.gitkeep
 !petalinux-install/.gitkeep
-vivado_project/KR260_CarrierBoard_ADRC/KR260_CarrierBoard_ADRC.srcs/sources_1/bd/system/system.bd
-vivado_project/KR260_CarrierBoard_ADRC/KR260_CarrierBoard_ADRC.srcs/sources_1/bd/system/system.bda
+vivado_project/KR260_CarrierBoard_ADRC/KR260_CarrierBoard_ADRC.srcs*
+
