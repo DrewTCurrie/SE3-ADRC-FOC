@@ -38,3 +38,5 @@ petalinux-docker/workspace/KR260_ADRC/project-spec/*
 !petalinux-install/.gitkeep
 vivado_project/KR260_CarrierBoard_ADRC/KR260_CarrierBoard_ADRC.srcs*
 
+#Kernel Modules
+ubuntuArm-Docker/modules/hello
