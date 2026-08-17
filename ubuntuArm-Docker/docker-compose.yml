@@ -1,0 +1,7 @@
+services:
+  petalinux-builder:
+    image: kernel-module-builder:24.04
+    stdin_open: true
+    tty: true
+    volumes:
+      - /opt/Xilinx/Projects/SE3-ADRC-FOC/ubuntuArm-Docker/modules/:/work:z
