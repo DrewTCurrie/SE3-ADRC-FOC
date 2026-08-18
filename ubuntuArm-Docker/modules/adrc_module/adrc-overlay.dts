@@ -1,0 +1,53 @@
+
+/dts-v1/;
+/plugin/;
+&fpga_full {
+	firmware-name = "adrc.bit.bin";
+	resets = <&zynqmp_reset 116>;
+	clocking0: clocking0 {
+		#clock-cells = <0>;
+		assigned-clock-rates = <19999800>;
+		assigned-clocks = <&zynqmp_clk 71>;
+		clock-output-names = "fabric_clk";
+		clocks = <&zynqmp_clk 71>;
+		compatible = "xlnx,fclk";
+	};
+	clocking1: clocking1 {
+		#clock-cells = <0>;
+		assigned-clock-rates = <99999001>;
+		assigned-clocks = <&zynqmp_clk 72>;
+		clock-output-names = "fabric_clk";
+		clocks = <&zynqmp_clk 72>;
+		compatible = "xlnx,fclk";
+	};
+	afi0: afi0 {
+		compatible = "xlnx,afi-fpga";
+		config-afi = < 0 0>, <1 0>, <2 0>, <3 0>, <4 0>, <5 0>, <6 0>, <7 0>, <8 0>, <9 0>, <10 0>, <11 0>, <12 0>, <13 0>, <14 0xa00>, <15 0x000>;
+		resets = <&zynqmp_reset 116>, <&zynqmp_reset 117>, <&zynqmp_reset 118>, <&zynqmp_reset 119>;
+	};
+};
+&amba {
+	#address-cells = <2>;
+	#size-cells = <2>;
+	axi_intc_0: interrupt-controller@a0000000 {
+		#interrupt-cells = <2>;
+		clock-names = "s_axi_aclk";
+		clocks = <&zynqmp_clk 71>;
+		compatible = "xlnx,axi-intc-4.1", "xlnx,xps-intc-1.00.a";
+		interrupt-controller ;
+		interrupt-names = "irq";
+		interrupt-parent = <&gic>;
+		interrupts = <0 89 4>;
+		reg = <0x0 0xa0000000 0x0 0x10000>;
+		xlnx,kind-of-intr = <0x1>;
+		xlnx,num-intr-inputs = <0x1>;
+	};
+	adrc_axi_ctrl_0: adrc_axi_ctrl@a0010000 {
+		clock-names = "s00_axi_aclk";
+		clocks = <&zynqmp_clk 71>;
+		compatible = "xlnx,adrc-axi-ctrl-1.0";
+		reg = <0x0 0xa0010000 0x0 0x10000>;
+		xlnx,s00-axi-addr-width = <0x7>;
+		xlnx,s00-axi-data-width = <0x20>;
+	};
+};
