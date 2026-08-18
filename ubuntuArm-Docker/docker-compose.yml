@@ -1,5 +1,5 @@
 services:
-  petalinux-builder:
+  kernel-module-builder:
     image: kernel-module-builder:24.04
     stdin_open: true
     tty: true
