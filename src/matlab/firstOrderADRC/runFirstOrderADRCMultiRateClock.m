@@ -83,6 +83,8 @@ electricalCountsPerRev = CountsPerRev/50;
 % from building during run time. This means getting the full 32 bit values
 % for the number. 
 precise_pi = fi(3.1415927410125732421875, 1,32,28);
+precise_step_radians = fi((2*precise_pi)/CountsPerRev, 1, 64,57);
+
 mechanicalRadiansPerCount = fi((2*precise_pi)/CountsPerRev, 1, 128, 64);
 
 electricalRadiansPerCount = fi((2*precise_pi)/400, 1, 128, 64);
