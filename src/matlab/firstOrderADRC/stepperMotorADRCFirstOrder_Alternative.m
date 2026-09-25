@@ -2,7 +2,7 @@
 % from Tuning and implementation variants of descrete-time ADRC 
 % Gernot Herbst and Rafal Madonski, Control Theory and Technology (2023)
 % 21:72-88
-function [k1,alpha,beta,gam]=MFP_ARDC_1st_parms_alt(bo,zCL,zEso,T)
+function [k1,alpha,beta,gam]=stepperMotorADRCFirstOrder_Alternative(bo,zCL,zEso,T)
 
 k1=(1-zCL)/T;
 
