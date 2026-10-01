@@ -8,7 +8,7 @@ close all hidden;
 % This is set based on the FPGA's base clock speed. Additional multi-rate
 % clocking is handled in the Simulink Model
 Ts=2e-5;
-
+ 
 %% Stepper Motor Parameters
 % motor parameters
 RT=50 ; 
@@ -83,7 +83,7 @@ electricalCountsPerRev = CountsPerRev/50;
 % from building during run time. This means getting the full 32 bit values
 % for the number. 
 precise_pi = fi(3.1415927410125732421875, 1,32,28);
-precise_step_radians = fi((2*precise_pi)/CountsPerRev, 1, 64,57);
+precise_step_radians = (2*pi)/20000;
 
 mechanicalRadiansPerCount = fi((2*precise_pi)/CountsPerRev, 1, 128, 64);
 
@@ -118,7 +118,7 @@ bid=1/L;
 biq=1/L;
 [k1_iqd,alpha_iqd,beta_iqd,gam_iqd]=MFP_ADRC_1st_params_multirate(biq,zCL_iqd,zESO_iqd,Ts);
 
-steps = 1;
+steps = 4;
 theta_ref=steps*1.8*pi/180; 
 stepTime=0.0;
 %zIC=[0;0]; % delay initial values
@@ -143,6 +143,7 @@ SpeedLoopType = fixdt(1,32,16);   % ±32768, LSB 1.5e-5
 CurrLoopType  = fixdt(1,32,20);   % ±2048,  LSB 9.5e-7
 %Bitwise logical operator data type
 bitwiseOperator = fixdt(0,32,0);
+VelType = fixdt(1,128, 64);
 %% Simulate
 % Important: Run the updated Simulink Model
 simOut=sim("stepperMotorADRCFirstOrder",'StopTime','0.05')
