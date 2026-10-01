@@ -19,9 +19,11 @@ PsiM=Km/RT;
 
 Jm=3.5e-5;
 Bm=8e-4;
+%Bm = 5e-3;
 TL=0.0;
 Js=3.46831e-5;
 Jn=3.3833e-7;
+Jf = 1e-4;
 J=Jm+Js+Jn;
 
 %% PCB and testbench Parameters 
@@ -118,8 +120,10 @@ bid=1/L;
 biq=1/L;
 [k1_iqd,alpha_iqd,beta_iqd,gam_iqd]=MFP_ADRC_1st_params_multirate(biq,zCL_iqd,zESO_iqd,Ts);
 
-steps = 4;
+steps = 10;
 theta_ref=steps*1.8*pi/180; 
+%theta_ref = 0.000314159 * 1000;
+
 stepTime=0.0;
 %zIC=[0;0]; % delay initial values
 
