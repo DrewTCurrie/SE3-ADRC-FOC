@@ -91,6 +91,23 @@ mechanicalRadiansPerCount = fi((2*precise_pi)/CountsPerRev, 1, 128, 64);
 
 electricalRadiansPerCount = fi((2*precise_pi)/400, 1, 128, 64);
 
+%% Loadcell Parameters
+
+% Offset measured on PCB
+loadcell_offset = 0;
+
+% Loadcell Constants
+excitation = 5; %volts
+sensitivity = 14.99e-6; %volts
+rated_capacity = 667.2; %Newtons (150 lbs)
+
+% Spring values 
+spring_constant = 5; % Units of lbf inch (Standard for most McMaster Carr Springs)
+% Convert the spring constant to Newton Meters for SI units
+spring_constant = (spring_constant * 4.448)/0.0254;
+%% Ballscrew Parameters
+ballscrew_pitch = 5; %mm/rev
+ballscrew_efficiency = 0.9; 
 
 %% Control Parameters
 % Position Control Constants
