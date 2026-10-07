@@ -7,7 +7,7 @@ close all hidden;
 % sample time
 % This is set based on the FPGA's base clock speed. Additional multi-rate
 % clocking is handled in the Simulink Model
-Ts=2e-5;
+Ts=2e-5; 
  
 %% Stepper Motor Parameters
 % motor parameters
@@ -137,7 +137,7 @@ bid=1/L;
 biq=1/L;
 [k1_iqd,alpha_iqd,beta_iqd,gam_iqd]=MFP_ADRC_1st_params_multirate(biq,zCL_iqd,zESO_iqd,Ts);
 
-steps = 10;
+steps = 16000;
 theta_ref=steps*1.8*pi/180; 
 %theta_ref = 0.000314159 * 1000;
 
