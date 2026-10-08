@@ -167,24 +167,41 @@ bitwiseOperator = fixdt(0,32,0);
 VelType = fixdt(1,128, 64);
 %% Simulate
 % Important: Run the updated Simulink Model
-simOut=sim("stepperMotorADRCFirstOrder",'StopTime','0.05')
+simOut=sim("stepperMotorADRCFirstOrder",'StopTime','0.07')
     
 
 %% Plotting
-time=simOut.tout;
-thetam=simOut.theta_m_degrees.data;
-target = ones(size(time,1),1).*(theta_ref*180/pi);
+t_T  = out.motor_torque.Time;   T  = double(squeeze(out.motor_torque.Data));
+t_iq = out.iq_reference.Time;   iq = double(squeeze(out.iq_reference.Data));
 
-% Create figures and plots
-figure
-plot(time,thetam,'r',time,target);
-xlabel("time (sec)")
-ylabel("rotor angle (deg)") 
-figure
-plot(simOut.calculated_phase_a_current, 'r')
-hold on; grid on;
-plot(simOut.calculated_phase_b_current, 'b')
-plot(simOut.true_phase_a_current, 'r--')
-plot(simOut.true_phase_b_current, 'b:')
-legend('Calculated Phase A Current', 'Calculated Phase B Current', 'True Phase A Current', 'True Phase B Current')
+fig = figure('Color','w','Units','inches','Position',[1 1 6.5 4]);
 
+yyaxis left
+plot(t_T*1e3, T, '-', 'LineWidth', 1.5, 'Color', [0 0.447 0.741])
+ylabel('Motor torque (N·m)')
+set(gca,'YColor',[0 0.447 0.741])
+
+yyaxis right
+plot(t_iq*1e3, iq, '-', 'LineWidth', 0.8, 'Color', [0.85 0.325 0.098])
+ylabel('q-axis current reference, i_q^* (A)')
+set(gca,'YColor',[0.85 0.325 0.098])
+
+xlabel('Time (ms)')
+title('Motor torque and q-axis current reference')
+legend('Torque','i_q^*','Location','northwest','Box','off')
+grid on; box on
+set(gca,'FontName','Times New Roman','FontSize',11,'TickDir','out')
+xlim([0 60])
+
+exportgraphics(fig,'torque_iq.pdf','ContentType','vector')   % or .png with 'Resolution',300
+
+
+win = [0.008 0.045];                       % clean linear window (s)
+iT  = t_T  >= win(1) & t_T  <= win(2);
+iI  = t_iq >= win(1) & t_iq <= win(2);
+
+pT = polyfit(t_T(iT),  T(iT),  1);         % pT(1) = torque slope (N·m/s)
+pI = polyfit(t_iq(iI), iq(iI), 1);         % pI(1) = current slope (A/s)
+
+Kt = pT(1)/pI(1);
+fprintf('dT/dt = %.2f N·m/s, diq/dt = %.2f A/s, Kt = %.3f N·m/A\n', pT(1), pI(1), Kt)
