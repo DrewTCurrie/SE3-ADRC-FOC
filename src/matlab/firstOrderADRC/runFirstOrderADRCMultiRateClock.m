@@ -92,6 +92,9 @@ mechanicalRadiansPerCount = fi((2*precise_pi)/CountsPerRev, 1, 128, 64);
 electricalRadiansPerCount = fi((2*precise_pi)/400, 1, 128, 64);
 
 %% Loadcell Parameters
+% Unit conversion constants 
+lbf_to_N = 4.448222;
+in_to_m = 0.0254;
 
 % Offset measured on PCB
 loadcell_offset = 0;
@@ -104,10 +107,15 @@ rated_capacity = 667.2; %Newtons (150 lbs)
 % Spring values 
 spring_constant = 5; % Units of lbf inch (Standard for most McMaster Carr Springs)
 % Convert the spring constant to Newton Meters for SI units
-spring_constant = (spring_constant * 4.448)/0.0254;
+spring_constant = (spring_constant * lbf_to_N)/in_to_m;
 %% Ballscrew Parameters
-ballscrew_pitch = 5; %mm/rev
+ballscrew_lead_mm = 5; %mm/rev
+ballscrew_pitch = ballscrew_lead_mm/1000; %m/rev
 ballscrew_efficiency = 0.9; 
+
+%Added useful gains to cutdown on extra blocks in simulink
+ballscrew_travel_per_rad = ballscrew_pitch/(2*pi);
+ballscrew_travel_per_force = ballscrew_pitch/(2*pi*ballscrew_efficiency);
 
 %% Control Parameters
 % Position Control Constants
@@ -167,41 +175,41 @@ bitwiseOperator = fixdt(0,32,0);
 VelType = fixdt(1,128, 64);
 %% Simulate
 % Important: Run the updated Simulink Model
-simOut=sim("stepperMotorADRCFirstOrder",'StopTime','0.07')
-    
-
-%% Plotting
-t_T  = out.motor_torque.Time;   T  = double(squeeze(out.motor_torque.Data));
-t_iq = out.iq_reference.Time;   iq = double(squeeze(out.iq_reference.Data));
-
-fig = figure('Color','w','Units','inches','Position',[1 1 6.5 4]);
-
-yyaxis left
-plot(t_T*1e3, T, '-', 'LineWidth', 1.5, 'Color', [0 0.447 0.741])
-ylabel('Motor torque (N·m)')
-set(gca,'YColor',[0 0.447 0.741])
-
-yyaxis right
-plot(t_iq*1e3, iq, '-', 'LineWidth', 0.8, 'Color', [0.85 0.325 0.098])
-ylabel('q-axis current reference, i_q^* (A)')
-set(gca,'YColor',[0.85 0.325 0.098])
-
-xlabel('Time (ms)')
-title('Motor torque and q-axis current reference')
-legend('Torque','i_q^*','Location','northwest','Box','off')
-grid on; box on
-set(gca,'FontName','Times New Roman','FontSize',11,'TickDir','out')
-xlim([0 60])
-
-exportgraphics(fig,'torque_iq.pdf','ContentType','vector')   % or .png with 'Resolution',300
-
-
-win = [0.008 0.045];                       % clean linear window (s)
-iT  = t_T  >= win(1) & t_T  <= win(2);
-iI  = t_iq >= win(1) & t_iq <= win(2);
-
-pT = polyfit(t_T(iT),  T(iT),  1);         % pT(1) = torque slope (N·m/s)
-pI = polyfit(t_iq(iI), iq(iI), 1);         % pI(1) = current slope (A/s)
-
-Kt = pT(1)/pI(1);
-fprintf('dT/dt = %.2f N·m/s, diq/dt = %.2f A/s, Kt = %.3f N·m/A\n', pT(1), pI(1), Kt)
+% simOut=sim("stepperMotorADRCFirstOrder",'StopTime','0.07')
+% 
+% 
+% %% Plotting
+% t_T  = out.motor_torque.Time;   T  = double(squeeze(out.motor_torque.Data));
+% t_iq = out.iq_reference.Time;   iq = double(squeeze(out.iq_reference.Data));
+% 
+% fig = figure('Color','w','Units','inches','Position',[1 1 6.5 4]);
+% 
+% yyaxis left
+% plot(t_T*1e3, T, '-', 'LineWidth', 1.5, 'Color', [0 0.447 0.741])
+% ylabel('Motor torque (N·m)')
+% set(gca,'YColor',[0 0.447 0.741])
+% 
+% yyaxis right
+% plot(t_iq*1e3, iq, '-', 'LineWidth', 0.8, 'Color', [0.85 0.325 0.098])
+% ylabel('q-axis current reference, i_q^* (A)')
+% set(gca,'YColor',[0.85 0.325 0.098])
+% 
+% xlabel('Time (ms)')
+% title('Motor torque and q-axis current reference')
+% legend('Torque','i_q^*','Location','northwest','Box','off')
+% grid on; box on
+% set(gca,'FontName','Times New Roman','FontSize',11,'TickDir','out')
+% xlim([0 60])
+% 
+% exportgraphics(fig,'torque_iq.pdf','ContentType','vector')   % or .png with 'Resolution',300
+% 
+% 
+% win = [0.008 0.045];                       % clean linear window (s)
+% iT  = t_T  >= win(1) & t_T  <= win(2);
+% iI  = t_iq >= win(1) & t_iq <= win(2);
+% 
+% pT = polyfit(t_T(iT),  T(iT),  1);         % pT(1) = torque slope (N·m/s)
+% pI = polyfit(t_iq(iI), iq(iI), 1);         % pI(1) = current slope (A/s)
+% 
+% Kt = pT(1)/pI(1);
+% fprintf('dT/dt = %.2f N·m/s, diq/dt = %.2f A/s, Kt = %.3f N·m/A\n', pT(1), pI(1), Kt)
