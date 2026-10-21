@@ -175,10 +175,113 @@ bitwiseOperator = fixdt(0,32,0);
 VelType = fixdt(1,128, 64);
 %% Simulate
 % Important: Run the updated Simulink Model
-% simOut=sim("stepperMotorADRCFirstOrder",'StopTime','0.07')
-% 
-% 
-% %% Plotting
+simOut=sim("stepperMotorADRCFirstOrderDataCollection",'StopTime','0.01')
+
+%% Plotting
+% data is prefixed with log_ and suffixed with _[letter corresponding to
+% data type]
+%
+% actual (a) (direct measurements of plant via simulink 
+% (not readable by actual control system)):
+%   angular_velocity_rad_per_sec - double
+%   angle_rad - double
+%   motor_torque - double
+%   linear_load_newton_meters - double
+% measured (m) (output of sensors/math of sensor outputs):
+%   quadrature_current - int32
+%   direct_current - int32
+%   phase_a_current - sfix32_En20
+%   phase_b_current - sfix32_En20
+%   angular_velocity_rad_per_sec - sfix32_En16
+%   enc_a - boolean
+%   enc_b - boolean
+%   load - uint16
+%   enc_count int32
+% commanded (c) (targets of motor controller or output of motor 
+% controller):
+%   park_clark_alpha - sfix32_En20
+%   park_clark_beta - sfix32_En20
+%   direct_voltage - sfix32_En20
+%   quadrature_voltage - sfix32_En20
+%   angular_velocity_rad_per_sec - sfix32_En16
+%   quadrature_current - sfix32_En20
+%   direct_current - sfix32_En20
+%   position_target_rad - sfix32_En16
+%   a_voltage - boolean
+%   a_direction - boolean
+%   b_voltage - boolean
+%   b_direction - boolean
+
+function [] = plot_timeseries_in_ms(timeseries_in)
+    plot(timeseries_in.Time * 10^3, double(timeseries_in.Data))
+end
+
+% plot angular velocity
+figure(1);
+plot_timeseries_in_ms(simOut.log_angular_velocity_rad_per_sec_a)
+hold on
+plot_timeseries_in_ms(simOut.log_angular_velocity_rad_per_sec_m)
+title('Angular Velocity');
+xlabel('Time (ms)');
+ylabel('Angular Velocity (Rads/Sec)');
+legend(["actual", "measured"])
+hold off
+
+% plot current
+figure(2);
+plot_timeseries_in_ms(simOut.log_direct_current_c)
+hold on
+plot_timeseries_in_ms(simOut.log_direct_current_m)
+plot_timeseries_in_ms(simOut.log_quadrature_current_c)
+plot_timeseries_in_ms(simOut.log_quadrature_current_m)
+title('Current');
+xlabel('Time (ms)');
+ylabel('Current (Amps)');
+legend(["direct commanded", "direct measured", "quadrature commanded", "quadrature measured"]);
+hold off
+
+% plot angle
+figure(3);
+plot_timeseries_in_ms(simOut.log_position_target_rad_c)
+hold on
+plot_timeseries_in_ms(simOut.log_angle_rad_a)
+title('Angle');
+xlabel('Time (ms)');
+ylabel('Angle (Rad)');
+legend(["commanded", "actual"])
+hold off
+
+% plot position
+figure(4);
+plot_timeseries_in_ms(simOut.log_position_target_rad_c * ballscrew_lead_mm / (2 * pi))
+hold on
+plot(simOut.log_angle_rad_a.Time * 10^3, unwrap(simOut.log_angle_rad_a.Data * ballscrew_lead_mm / (2 * pi)))
+title('Angle');
+xlabel('Time (ms)');
+ylabel('Position (mm)');
+legend(["commanded", "actual"])
+hold off
+
+% plot load
+figure(5);
+plot_timeseries_in_ms(simOut.log_linear_load_newton_meters_a)
+hold on
+plot_timeseries_in_ms(simOut.log_load_m)
+title('Load');
+xlabel('Time (ms)');
+ylabel('Load (N\cdotm)');
+legend(["actual", "measured"])
+hold off
+
+% plot torque
+figure(6);
+plot_timeseries_in_ms(simOut.log_motor_torque_a)
+title('Torque');
+xlabel('Time (ms)');
+ylabel('Torque (N\cdotm)');
+legend(["actual"])
+hold off
+
 % t_T  = out.motor_torque.Time;   T  = double(squeeze(out.motor_torque.Data));
 % t_iq = out.iq_reference.Time;   iq = double(squeeze(out.iq_reference.Data));
 % 
