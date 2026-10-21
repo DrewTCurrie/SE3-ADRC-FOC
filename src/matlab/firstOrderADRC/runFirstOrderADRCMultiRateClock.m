@@ -256,7 +256,7 @@ figure(4);
 plot_timeseries_in_ms(simOut.log_position_target_rad_c * ballscrew_lead_mm / (2 * pi))
 hold on
 plot(simOut.log_angle_rad_a.Time * 10^3, unwrap(simOut.log_angle_rad_a.Data * ballscrew_lead_mm / (2 * pi)))
-title('Angle');
+title('Position');
 xlabel('Time (ms)');
 ylabel('Position (mm)');
 legend(["commanded", "actual"])
