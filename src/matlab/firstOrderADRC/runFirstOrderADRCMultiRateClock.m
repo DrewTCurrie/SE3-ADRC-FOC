@@ -21,8 +21,8 @@ Jm=3.5e-5;
 Bm=8e-4;
 %Bm = 5e-3;
 TL=0.0;
-Js=3.46831e-5;
-Jn=3.3833e-7;
+Js=2.2496e-5;
+Jn=3.5462e-7;
 Jf = 1e-4;
 J=Jm+Js+Jn;
 
@@ -175,7 +175,7 @@ bitwiseOperator = fixdt(0,32,0);
 VelType = fixdt(1,128, 64);
 %% Simulate
 % Important: Run the updated Simulink Model
-simOut=sim("stepperMotorADRCFirstOrderDataCollection",'StopTime','0.01')
+simOut=sim("stepperMotorADRCFirstOrderDataCollection",'StopTime','0.25')
 
 %% Plotting
 % data is prefixed with log_ and suffixed with _[letter corresponding to
