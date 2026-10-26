@@ -53,7 +53,7 @@ Shunt_Resistance = .1;
 
 % These are used to emulate the ADCS
 ADC_Emulated_conversion_factor = Shunt_Resistance*Shunt_Amp_Gain;
-VoltagetoADCValue = (2^ADC_Precision)/5;
+VoltagetoADCValue = (2^ADC_Precision-1)/5;
 
 % These are used to convert from the ADC 16 bit register to a voltage value
 inverseVoltagetoADCValue = 1/VoltagetoADCValue;
@@ -98,12 +98,13 @@ in_to_m = 0.0254;
 
 % Offset measured on PCB
 loadcell_offset = 0;
+loadcell_bias = 2.5;
 
 % Loadcell Constants
 excitation = 5; %volts
-sensitivity = 14.99e-6; %volts
-rated_capacity = 667.2; %Newtons (150 lbs)
-
+sensitivity = 2e-3; %volts
+rated_capacity = 50*lbf_to_N; %Newtons (50 lbs)
+loadcell_decode_gain = 47.1460;
 % Spring values 
 spring_constant = 5; % Units of lbf inch (Standard for most McMaster Carr Springs)
 % Convert the spring constant to Newton Meters for SI units
