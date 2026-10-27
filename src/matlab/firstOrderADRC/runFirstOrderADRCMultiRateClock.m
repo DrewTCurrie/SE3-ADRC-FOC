@@ -8,7 +8,8 @@ close all hidden;
 % This is set based on the FPGA's base clock speed. Additional multi-rate
 % clocking is handled in the Simulink Model
 Ts=2e-5; 
- 
+%% Tim, please try this value for Ts instead. I'm not sure how this will change the system, however it might be worth me writting about. Thanks!
+%Ts = 5e-9; 
 %% Stepper Motor Parameters
 % motor parameters
 RT=50 ; 
@@ -156,9 +157,10 @@ stepTime=0.0;
 %% Feedback Filter Parameters
 
 % Low pass filter for velocity 
-wf = 5000;             
+wf = 5000;
+% Seperate from the global Ts, can you try changing this filter time constant seperately? Thanks!             
 af = 1 - exp(-wf*Ts);     
-
+%af = 1 - exp(-wf*(5e-9))
 %% Simulation Parameters
 
 ParamType = fixdt(1,32,20);
