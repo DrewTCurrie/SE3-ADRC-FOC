@@ -106,6 +106,8 @@ excitation = 5; %volts
 sensitivity = 2e-3; %volts
 rated_capacity = 50*lbf_to_N; %Newtons (50 lbs)
 loadcell_decode_gain = 47.1460;
+adc_volts_per_count = ADC_VREF / (2^ADC_Precision-1);
+
 % Spring values 
 spring_constant = 5; % Units of lbf inch (Standard for most McMaster Carr Springs)
 % Convert the spring constant to Newton Meters for SI units
